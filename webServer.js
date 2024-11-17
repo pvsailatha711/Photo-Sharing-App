@@ -1,7 +1,7 @@
 /**
  * This builds on the webServer of previous projects in that it exports the
  * current directory via webserver listing on a hard code (see portno below)
- * port. It also establishes a connection to the MongoDB named 'project6'.
+ * port. It also establishes a connection to the MongoDB named 'project7'.
  *
  * To start the webserver run the command:
  *    node webServer.js
@@ -16,7 +16,7 @@
  * /test        - Returns the SchemaInfo object of the database in JSON format.
  *                This is good for testing connectivity with MongoDB.
  * /test/info   - Same as /test.
- * /test/counts - Returns the population counts of the project6 collections in the
+ * /test/counts - Returns the population counts of the project7 collections in the
  *                database. Format is a JSON object with properties being the
  *                collection name and the values being the counts.
  *
@@ -39,6 +39,14 @@ mongoose.Promise = require("bluebird");
 const express = require("express");
 const app = express();
 
+
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const multer = require("multer");
+
+app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
+app.use(bodyParser.json());
+
 // Load the Mongoose schema for User, Photo, and SchemaInfo
 const User = require("./schema/user.js");
 const Photo = require("./schema/photo.js");
@@ -48,7 +56,7 @@ const SchemaInfo = require("./schema/schemaInfo.js");
 // this line for tests and before submission!
 // const models = require("./modelData/photoApp.js").models;
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb://127.0.0.1/project6", {
+mongoose.connect("mongodb://127.0.0.1/project7", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
