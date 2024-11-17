@@ -1,0 +1,61 @@
+.userDetail-container {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    margin: 20px auto;
+    border: 1px solid #dfe3e6;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .userDetail-container::before {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: -10%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, #d0d7df 0%, transparent 80%);
+    opacity: 0.3;
+    z-index: 0;
+  }
+  
+  .userDetail-header {
+    color: #444;
+    font-weight: bold;
+    font-size: 1.6rem;
+    z-index: 1;
+  }
+  
+  .userDetail-subtitle {
+    color: #6b7280;
+    font-style: italic;
+    margin-top: 8px;
+    font-size: 1rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  
+  .userDetail-description {
+    color: #333333;
+    line-height: 1.6;
+    margin-top: 18px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .userDetail-button {
+    margin-top: 20px;
+    border-color: #0078d4;
+    color: #0078d4;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+    display: flex !important;
+    margin-top: 15px !important;
+  }
+
+  

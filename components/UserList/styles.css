@@ -1,0 +1,42 @@
+.userList-container {
+    padding: 20px;
+    border-radius: 10px;
+}
+  
+.userList-title {
+    color: #0078d4;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+  
+.userList-item {
+    color: black;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+  
+.userList-item:hover {
+    background-color: #e3f2fd;
+}
+  
+.userList-divider {
+    opacity: 0.5;
+    background-color: #0078d4;
+}
+.main-div {
+    position: relative;
+}
+  
+.photos {
+    top: 15px;
+    right: 60px;
+    cursor: pointer;
+    position: absolute !important;
+}
+.comments {
+    top: 15px;
+    right: 10px;
+    cursor: pointer;
+    position: absolute !important;
+}

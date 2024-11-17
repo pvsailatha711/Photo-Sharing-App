@@ -1,0 +1,27 @@
+.customBox {
+    height: 87vh;
+    overflow: auto;
+}
+
+.commentBox {
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.commentBox:hover {
+    background-color: azure;
+}
+
+.commentBox .MuiTypography-body2 {
+    color: #333;
+}
+.uploadedOn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-card {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
