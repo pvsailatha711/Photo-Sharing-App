@@ -71,11 +71,26 @@ function PhotoShare() {
     );
   }
 
+  const handlePhotoUpload = async (file) => {
+    const formData = new FormData();
+    formData.append('photo', file);
+    try {
+      const response = await axios.post('/photos/new', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('Photo uploaded successfully:', response.data);
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+    }
+  };
+
   return (
     <div>
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ position: 'sticky', top: '0px' }}>
-          <TopBar contentTitle={contentTitle} advanceFeature={advanceFeature} onToggle={toggleAdvanceFeature} user={user} logout={handleLogout} />
+          <TopBar contentTitle={contentTitle} advanceFeature={advanceFeature} onToggle={toggleAdvanceFeature} user={user} logout={handleLogout} onPhotoUpload={handlePhotoUpload} />
         </Grid>
         <div className="main-topbar-buffer" />
         <Grid item sm={3}>

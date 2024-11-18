@@ -43,6 +43,7 @@ const app = express();
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const path = require('path');
 
 app.use(session({secret: "secretKey", resave: false, saveUninitialized: false}));
 app.use(bodyParser.json());
@@ -293,6 +294,38 @@ app.post('/commentsOfPhoto/:photo_id', async function (req, res) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
     }
+});
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'images')); // Directory to store uploaded images
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = req.session.user.last_name + '-' + Date.now() + '.jpg';
+    cb(null, uniqueName);
+  }
+});
+const upload = multer({ storage: storage });
+
+app.post('/photos/new', upload.single('photo'), async function (req, res) {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  if (!req.session.user) {
+    return res.status(401).send('Unauthorized: User must be logged in to upload photos');
+  }
+  try {
+    const newPhoto = new Photo({
+      file_name: req.file.filename,
+      date_time: new Date(),
+      user_id: req.session.user._id
+    });
+    await newPhoto.save();
+    return res.status(200).send(newPhoto);
+  } catch (err) {
+    console.error('Error uploading photo:', err);
+    return res.status(500).send('Internal Server Error');
+  }
 });
 
 const server = app.listen(3000, function () {

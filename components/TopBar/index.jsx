@@ -1,10 +1,18 @@
 import React from "react";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import Switch from '@mui/material/Switch';
 
 import "./styles.css";
 
-function TopBar({contentTitle, advanceFeature, onToggle, user, logout}) {
+function TopBar({contentTitle, advanceFeature, onToggle, user, logout, onPhotoUpload}) {
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      onPhotoUpload(file);
+    }
+  };
+  
   return (
     <AppBar className="topbar-appBar" position="absolute">
       <Toolbar>
@@ -19,6 +27,15 @@ function TopBar({contentTitle, advanceFeature, onToggle, user, logout}) {
           user?._id ? 
           (
             <>
+              <Button variant="contained" component="label">
+                Add Photo
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </Button>
               <button className="logout-button" onClick={() => {logout();}}>
                 Log Out
               </button>
