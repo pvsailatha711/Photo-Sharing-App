@@ -9,8 +9,8 @@ function UserPhotos({ advanceFeature, user }) {
   const { userId, photoIndex } = useParams();
   const [photos, setPhotos] = useState([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(parseInt(photoIndex, 10) || 0);
-  const [newComment, setNewComment] = useState('');
-  const [commentError, setCommentError] = useState('');
+  const [newComments, setNewComments] = useState({});
+  const [commentErrors, setCommentErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,15 +46,31 @@ function UserPhotos({ advanceFeature, user }) {
     }
   };
 
-  const handleAddComment = async () => {
-    if (!newComment.trim()) {
-      setCommentError("Comment cannot be empty");
+  const handleCommentChange = (photoId, value) => {
+    setNewComments(prevComments => ({
+      ...prevComments,
+      [photoId]: value
+    }));
+  };
+
+  const handleAddComment = async (photoId, index) => {
+    if (!newComments[photoId]?.trim()) {
+      setCommentErrors(prevErrors => ({
+        ...prevErrors,
+        [photoId]: "Comment cannot be empty"
+      }));
       return;
     }
     try {
-      let response = await axios.post(`/commentsOfPhoto/${photos[currentPhotoIndex]._id}`, { comment: newComment });
-      setNewComment('');
-      setCommentError('');
+      let response = await axios.post(`/commentsOfPhoto/${photoId}`, { comment: newComments[photoId] });
+      setNewComments(prevComments => ({
+        ...prevComments,
+        [photoId]: ''
+      }));
+      setCommentErrors(prevErrors => ({
+        ...prevErrors,
+        [photoId]: ''
+      }));
       const newCommentWithCurrentUser = {
         ...response.data,
         user: {
@@ -65,12 +81,15 @@ function UserPhotos({ advanceFeature, user }) {
       };
       setPhotos((prevPhotos) => {
         const updatedPhotos = [...prevPhotos];
-        updatedPhotos[currentPhotoIndex].comments.push(newCommentWithCurrentUser);
+        updatedPhotos[index].comments.push(newCommentWithCurrentUser);
         return updatedPhotos;
       });
     } catch (error) {
       console.error("Error adding comment:", error);
-      setCommentError("Failed to add comment");
+      setCommentErrors(prevErrors => ({
+        ...prevErrors,
+        [photoId]: "Failed to add comment"
+      }));
     }
   };
 
@@ -124,14 +143,14 @@ function UserPhotos({ advanceFeature, user }) {
               <Box marginTop={2}>
                 <TextField
                   label="Add a comment"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
+                  value={newComments[currentPhoto._id] || ''}
+                  onChange={(e) => handleCommentChange(currentPhoto._id, e.target.value)}
                   fullWidth
                   variant="outlined"
-                  error={Boolean(commentError)}
-                  helperText={commentError}
+                  error={Boolean(commentErrors[currentPhoto._id])}
+                  helperText={commentErrors[currentPhoto._id]}
                 />
-                <Button variant="contained" color="primary" onClick={handleAddComment} sx={{ marginTop: 1 }}>
+                <Button variant="contained" color="primary" onClick={() => handleAddComment(currentPhoto._id, currentPhotoIndex)} sx={{ marginTop: 1 }}>
                   Submit Comment
                 </Button>
               </Box>
@@ -143,7 +162,7 @@ function UserPhotos({ advanceFeature, user }) {
           </Box>
         </Box>
       ) : (
-        photos.map((photo) => (
+        photos.map((photo, index) => (
           <Card key={photo._id} variant="outlined" sx={{ marginBottom: 2 }} className="main-card">
             <CardMedia
               component="img"
@@ -184,14 +203,14 @@ function UserPhotos({ advanceFeature, user }) {
               <Box marginTop={2}>
                 <TextField
                   label="Add a comment"
-                  value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
+                  value={newComments[photo._id] || ''}
+                  onChange={(e) => handleCommentChange(photo._id, e.target.value)}
                   fullWidth
                   variant="outlined"
-                  error={Boolean(commentError)}
-                  helperText={commentError}
+                  error={Boolean(commentErrors[photo._id])}
+                  helperText={commentErrors[photo._id]}
                 />
-                <Button variant="contained" color="primary" onClick={() => handleAddComment(photo._id)} sx={{ marginTop: 1 }}>
+                <Button variant="contained" color="primary" onClick={() => handleAddComment(photo._id, index)} sx={{ marginTop: 1 }}>
                   Submit Comment
                 </Button>
               </Box>
