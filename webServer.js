@@ -256,6 +256,43 @@ app.use(function (req, res, next) {
   }
   return next();
 });
+// POST endpoint to add a comment to a photo
+app.post('/commentsOfPhoto/:photo_id', async function (req, res) {
+    const { photo_id } = req.params;
+    const { comment } = req.body;
+
+    // Check if user is logged in
+    if (!req.session.user) {
+      return res.status(401).send('Unauthorized: User must be logged in to comment');
+    }
+
+    // Validate comment input
+    if (!comment || comment.trim() === '') {
+      return res.status(400).send('Comment cannot be empty');
+    }
+
+    try {
+      // Find the photo to add the comment to
+      const photo = await Photo.findById(photo_id);
+      if (!photo) {
+        return res.status(404).send('Photo not found');
+      }
+
+      // Create a comment object
+      const newComment = {
+          comment: comment,
+          user_id: req.session.user._id,
+          date_time: new Date(),
+      };
+      // Add the comment to the photo's comments array and save
+      photo.comments.push(newComment);
+      await photo.save();
+      return res.status(200).send(newComment); // Return the added comment
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+});
 
 const server = app.listen(3000, function () {
   const port = server.address().port;

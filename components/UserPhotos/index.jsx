@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Box, Card, CardMedia, CardContent, Divider, Button } from "@mui/material";
+import { Typography, Box, Card, CardMedia, CardContent, Divider, Button, TextField } from "@mui/material";
+import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
-// import fetchModel from "../../lib/fetchModelData";
 import fetchAxios from "../../lib/fetchAxiosData";
 import "./styles.css";
 
@@ -9,6 +9,8 @@ function UserPhotos({ advanceFeature }) {
   const { userId, photoIndex } = useParams();
   const [photos, setPhotos] = useState([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(parseInt(photoIndex, 10) || 0);
+  const [newComment, setNewComment] = useState('');
+  const [commentError, setCommentError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +42,26 @@ function UserPhotos({ advanceFeature }) {
     }
   };
 
+  const handleAddComment = async () => {
+    if (!newComment.trim()) {
+      setCommentError("Comment cannot be empty");
+      return;
+    }
+    try {
+      const response = await axios.post(`/commentsOfPhoto/${photos[currentPhotoIndex]._id}`, { comment: newComment });
+      setNewComment('');
+      setCommentError('');
+      setPhotos((prevPhotos) => {
+        const updatedPhotos = [...prevPhotos];
+        updatedPhotos[currentPhotoIndex].comments.push(response.data);
+        return updatedPhotos;
+      });
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      setCommentError("Failed to add comment");
+    }
+  };
+
   if (!photos.length) {
     return <Typography>Loading photos...</Typography>;
   }
@@ -48,6 +70,7 @@ function UserPhotos({ advanceFeature }) {
 
   return (
     <Box padding={2} className="customBox">
+      {currentPhotoIndex.toString()}
       {advanceFeature ? (
         <Box className="main-card">
           <Card key={currentPhoto._id} variant="outlined" sx={{ marginBottom: 2 }}>
@@ -78,7 +101,7 @@ function UserPhotos({ advanceFeature }) {
                         {new Date(comment.date_time).toLocaleString()}
                       </Typography>
                       <Typography variant="body2" color="textPrimary">
-                        <Link to={`/users/${comment.user._id}`} style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}>
+                        <Link to={`/users/${comment?.user._id}`} style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}>
                           {comment.user.first_name} {comment.user.last_name}
                         </Link>
                         : {comment.comment}
@@ -87,6 +110,20 @@ function UserPhotos({ advanceFeature }) {
                   ))}
                 </Box>
               )}
+              <Box marginTop={2}>
+                <TextField
+                  label="Add a comment"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                  error={Boolean(commentError)}
+                  helperText={commentError}
+                />
+                <Button variant="contained" color="primary" onClick={handleAddComment} sx={{ marginTop: 1 }}>
+                  Submit Comment
+                </Button>
+              </Box>
             </CardContent>
           </Card>
           <Box display="flex" justifyContent="space-between">
@@ -124,8 +161,8 @@ function UserPhotos({ advanceFeature }) {
                         {new Date(comment.date_time).toLocaleString()}
                       </Typography>
                       <Typography variant="body2" color="textPrimary">
-                        <Link to={`/users/${comment.user._id}`} style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}>
-                          {comment.user.first_name} {comment.user.last_name}
+                        <Link to={`/users/${comment?.user?._id}`} style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}>
+                          {comment?.user?.first_name} {comment?.user?.last_name}
                         </Link>
                         : {comment.comment}
                       </Typography>
@@ -133,6 +170,20 @@ function UserPhotos({ advanceFeature }) {
                   ))}
                 </Box>
               )}
+              <Box marginTop={2}>
+                <TextField
+                  label="Add a comment"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  fullWidth
+                  variant="outlined"
+                  error={Boolean(commentError)}
+                  helperText={commentError}
+                />
+                <Button variant="contained" color="primary" onClick={() => handleAddComment(photo._id)} sx={{ marginTop: 1 }}>
+                  Submit Comment
+                </Button>
+              </Box>
             </CardContent>
           </Card>
         ))
