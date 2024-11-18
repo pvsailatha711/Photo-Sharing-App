@@ -117,7 +117,7 @@ function PhotoShare() {
               />
               <Route path="/users" element={<UserList advanceFeature={advanceFeature} />} />
               <Route path="/users/:userId" element={<UserDetailRoute />} />
-              <Route path="/photos/:userId/:photoIndex?" element={<UserPhotos userId={useParams()} advanceFeature={advanceFeature} />} />
+              <Route path="/photos/:userId/:photoIndex?" element={<UserPhotos userId={useParams()} advanceFeature={advanceFeature} user={user} />} />
             </Routes>
           </Paper>
         </Grid>

@@ -5,7 +5,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import fetchAxios from "../../lib/fetchAxiosData";
 import "./styles.css";
 
-function UserPhotos({ advanceFeature }) {
+function UserPhotos({ advanceFeature, user }) {
   const { userId, photoIndex } = useParams();
   const [photos, setPhotos] = useState([]);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(parseInt(photoIndex, 10) || 0);
@@ -52,12 +52,20 @@ function UserPhotos({ advanceFeature }) {
       return;
     }
     try {
-      const response = await axios.post(`/commentsOfPhoto/${photos[currentPhotoIndex]._id}`, { comment: newComment });
+      let response = await axios.post(`/commentsOfPhoto/${photos[currentPhotoIndex]._id}`, { comment: newComment });
       setNewComment('');
       setCommentError('');
+      const newCommentWithCurrentUser = {
+        ...response.data,
+        user: {
+          _id: user._id,
+          first_name: user.first_name,
+          last_name: user.last_name
+        }
+      };
       setPhotos((prevPhotos) => {
         const updatedPhotos = [...prevPhotos];
-        updatedPhotos[currentPhotoIndex].comments.push(response.data);
+        updatedPhotos[currentPhotoIndex].comments.push(newCommentWithCurrentUser);
         return updatedPhotos;
       });
     } catch (error) {
@@ -99,7 +107,7 @@ function UserPhotos({ advanceFeature }) {
                   <Typography variant="h6">Comments</Typography>
                   <Divider />
                   {currentPhoto.comments.map((comment) => (
-                    <Box key={comment._id} className="commentBox" marginTop={2} padding={2}>
+                    <Box key={comment._id || comment.date_time} className="commentBox" marginTop={2} padding={2}>
                       <Typography variant="subtitle2" color="textSecondary">
                         {new Date(comment.date_time).toLocaleString()}
                       </Typography>
@@ -159,7 +167,7 @@ function UserPhotos({ advanceFeature }) {
                   <Typography variant="h6">Comments</Typography>
                   <Divider />
                   {photo.comments.map((comment) => (
-                    <Box key={comment._id} className="commentBox" marginTop={2} padding={2}>
+                    <Box key={comment._id || comment.date_time} className="commentBox" marginTop={2} padding={2}>
                       <Typography variant="subtitle2" color="textSecondary">
                         {new Date(comment.date_time).toLocaleString()}
                       </Typography>

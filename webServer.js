@@ -218,10 +218,11 @@ app.post('/admin/login', async function (req, res) {
       if (!user) {
         return res.status(400).send('Invalid login_name');
       }
-      req.session.user = { _id: user._id, first_name: user.first_name };
+      req.session.user = { _id: user._id, first_name: user.first_name, last_name: user.last_name };
       return res.status(200).send({
         _id: user._id,
         first_name: user.first_name,
+        last_name: user.last_name,
       });
     } catch (err) {
       return res.status(500).send('Internal Server Error');
