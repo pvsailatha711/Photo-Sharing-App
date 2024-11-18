@@ -2,45 +2,37 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { Grid, Typography, Paper } from "@mui/material";
 import { HashRouter, Route, Routes, useParams, useLocation } from "react-router-dom";
+import axios from 'axios';
 
 import "./styles/main.css";
 import TopBar from "./components/TopBar";
 import UserDetail from "./components/UserDetail";
 import UserList from "./components/UserList";
 import UserPhotos from "./components/UserPhotos";
-// import fetchModel from "./lib/fetchModelData";
 import fetchAxios from "./lib/fetchAxiosData";
+import LoginRegister from './components/LoginRegister';
 
 function UserDetailRoute() {
   const { userId } = useParams();
-  // Commenting this to check isssues in console
-  // console.log("UserDetailRoute: userId is:", userId);
   return <UserDetail userId={userId} />;
 }
 
-// function UserPhotosRoute() {
-//   const { userId } = useParams();
-//   return <UserPhotos userId={userId} />;
-// }
 
 function PhotoShare() {
   const [contentTitle, setContentTitle] = useState("Home");
   const [advanceFeature, setAdvanceFeature] = useState(window.models.advanceModel().advanceFeature);
   const location = useLocation();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     async function fetchUserDetails() {
-      let id_from_route = location.pathname.split('/');
+      const pathSegments = location.pathname.split('/');
       if (location.pathname.startsWith("/users/")) {
-        // let userDetails = await window.models.userModel(id_from_route[2]);
-        const userDetails = await fetchAxios(`user/${id_from_route[2]}`);
-        const userName = `${userDetails.data.first_name + ' ' + userDetails.data.last_name} |`;
-        setContentTitle(userName);
+        const userDetails = await fetchAxios(`user/${pathSegments[2]}`);
+        setContentTitle(`${userDetails.data.first_name} ${userDetails.data.last_name} |`);
       } else if (location.pathname.startsWith("/photos/")) {
-        // let userDetails = await window.models.userModel(id_from_route[2]);
-        const userDetails = await fetchAxios(`user/${id_from_route[2]}`);
-        const userName = `${userDetails.data.first_name + ' ' + userDetails.data.last_name}`;
-        setContentTitle(`Photos of "${userName}" |`);
+        const userDetails = await fetchAxios(`user/${pathSegments[2]}`);
+        setContentTitle(`Photos of "${userDetails.data.first_name} ${userDetails.data.last_name}" |`);
       } else {
         setContentTitle("Home |");
       }
@@ -52,14 +44,38 @@ function PhotoShare() {
     setAdvanceFeature(!advanceFeature);
   };
 
+  const handleLogin = async (login_name) => {
+    try {
+      const response = await axios.post('/admin/login', { login_name });
+      setUser(response.data);
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('/admin/logout');
+      setUser(null);
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
+
+  if (!user) {
+    return (
+      <div>
+        <TopBar user={user} logout={handleLogout} />
+        <LoginRegister onLogin={handleLogin} />
+      </div>
+    );
+  }
+
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item xs={12} style={{
-            position: 'sticky',
-            top: '0px'
-          }}>
-          <TopBar contentTitle={contentTitle} advanceFeature={advanceFeature} onToggle={toggleAdvanceFeature} />
+        <Grid item xs={12} style={{ position: 'sticky', top: '0px' }}>
+          <TopBar contentTitle={contentTitle} advanceFeature={advanceFeature} onToggle={toggleAdvanceFeature} user={user} logout={handleLogout} />
         </Grid>
         <div className="main-topbar-buffer" />
         <Grid item sm={3}>

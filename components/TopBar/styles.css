@@ -17,9 +17,23 @@
   color: #e0e0e0;
 }
 
-.buttonClick {
-  cursor: pointer;
-}
 .toggleSwitch {
   padding-left: 20px;
+}
+
+.logout-button {
+  color: white;
+  background-color: #3f51b5;
+  font-weight: bold !important;
+  background: none;
+  border: none !important;
+  cursor: pointer;
+  padding: 5px 10px !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 1.5rem;
+}
+
+.logout-button:hover {
+  color: #ff1a1a;
 }

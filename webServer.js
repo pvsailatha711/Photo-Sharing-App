@@ -207,6 +207,56 @@ app.get("/photosOfUser/:id", async function (request, response) {
   }
 });
 
+// Endpoint to log in a user
+app.post('/admin/login', async function (req, res) {
+    const { login_name } = req.body;
+    if (!login_name) {
+      return res.status(400).send('Missing login_name');
+    }
+    try {
+      const user = await User.findOne({ login_name });
+      if (!user) {
+        return res.status(400).send('Invalid login_name');
+      }
+      req.session.user = { _id: user._id, first_name: user.first_name };
+      return res.status(200).send({
+        _id: user._id,
+        first_name: user.first_name,
+      });
+    } catch (err) {
+      return res.status(500).send('Internal Server Error');
+    }
+});
+
+// Logout endpoint
+app.post('/admin/logout', async function (req, res) {
+  if (!req.session.user) {
+    return res.status(400).send('Not logged in');
+  }
+  try {
+    await new Promise((resolve, reject) => {
+      req.session.destroy(err => {
+        if (err) {
+          reject(new Error('Error logging out'));
+        } else {
+          resolve();
+        }
+      });
+    });
+    return res.status(200).send('Logged out');
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
+// Middleware to check if user is logged in
+app.use(function (req, res, next) {
+  if (!req.session.user) {
+      return res.redirect('/photo-share.html');
+  }
+  return next();
+});
+
 const server = app.listen(3000, function () {
   const port = server.address().port;
   console.log(
