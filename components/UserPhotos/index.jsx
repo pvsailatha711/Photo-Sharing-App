@@ -25,6 +25,10 @@ function UserPhotos({ advanceFeature }) {
     getUserPhotos();
   }, [userId]);
 
+  useEffect(() => {
+    setCurrentPhotoIndex(parseInt(photoIndex, 10) || 0);
+  }, [photoIndex]);
+
   const goToPhoto = (index) => {
     setCurrentPhotoIndex(index);
     navigate(`/photos/${userId}/${index}`);
@@ -70,7 +74,6 @@ function UserPhotos({ advanceFeature }) {
 
   return (
     <Box padding={2} className="customBox">
-      {currentPhotoIndex.toString()}
       {advanceFeature ? (
         <Box className="main-card">
           <Card key={currentPhoto._id} variant="outlined" sx={{ marginBottom: 2 }}>
@@ -101,8 +104,8 @@ function UserPhotos({ advanceFeature }) {
                         {new Date(comment.date_time).toLocaleString()}
                       </Typography>
                       <Typography variant="body2" color="textPrimary">
-                        <Link to={`/users/${comment?.user._id}`} style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}>
-                          {comment.user.first_name} {comment.user.last_name}
+                        <Link to={`/users/${comment?.user?._id}`} style={{ textDecoration: "none", color: "blue", fontWeight: "bold" }}>
+                          {comment?.user?.first_name} {comment?.user?.last_name}
                         </Link>
                         : {comment.comment}
                       </Typography>
