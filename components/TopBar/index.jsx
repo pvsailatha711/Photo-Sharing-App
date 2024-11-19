@@ -27,7 +27,7 @@ function TopBar({contentTitle, advanceFeature, onToggle, user, logout, onPhotoUp
           user?._id ? 
           (
             <>
-              <Button variant="contained" component="label">
+              <Button variant="contained" component="label" style={{marginLeft: '10px'}}>
                 Add Photo
                 <input
                   type="file"

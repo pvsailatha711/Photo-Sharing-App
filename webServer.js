@@ -210,14 +210,14 @@ app.get("/photosOfUser/:id", async function (request, response) {
 
 // Endpoint to log in a user
 app.post('/admin/login', async function (req, res) {
-    const { login_name } = req.body;
-    if (!login_name) {
+    const { login_name, password } = req.body;
+    if (!login_name || !password) {
       return res.status(400).send('Missing login_name');
     }
     try {
       const user = await User.findOne({ login_name });
-      if (!user) {
-        return res.status(400).send('Invalid login_name');
+      if (!user || user.password !== password) {
+        return res.status(400).send('Invalid login_name or password');
       }
       req.session.user = { _id: user._id, first_name: user.first_name, last_name: user.last_name };
       return res.status(200).send({
@@ -251,13 +251,6 @@ app.post('/admin/logout', async function (req, res) {
   }
 });
 
-// Middleware to check if user is logged in
-app.use(function (req, res, next) {
-  if (!req.session.user) {
-      return res.redirect('/photo-share.html');
-  }
-  return next();
-});
 // POST endpoint to add a comment to a photo
 app.post('/commentsOfPhoto/:photo_id', async function (req, res) {
     const { photo_id } = req.params;
@@ -324,6 +317,42 @@ app.post('/photos/new', upload.single('photo'), async function (req, res) {
     return res.status(200).send(newPhoto);
   } catch (err) {
     console.error('Error uploading photo:', err);
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/user', async function (req, res) {
+  const { login_name, password, first_name, last_name, location, description, occupation } = req.body;
+
+  if (!login_name || !password || !first_name || !last_name) {
+    return res.status(400).send('All required fields (login_name, password, first_name, last_name) must be provided');
+  }
+
+  try {
+    const existingUser = await User.findOne({ login_name });
+    if (existingUser) {
+      return res.status(400).send('A user with this login_name already exists');
+    }
+    const newUser = new User({
+      login_name,
+      password,
+      first_name,
+      last_name,
+      location,
+      description,
+      occupation,
+    });
+
+    await newUser.save();
+
+    return res.status(200).send({
+      login_name: newUser.login_name,
+      _id: newUser._id,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name
+    });
+  } catch (error) {
+    console.error('Error creating user:', error);
     return res.status(500).send('Internal Server Error');
   }
 });

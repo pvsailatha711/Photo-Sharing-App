@@ -44,9 +44,9 @@ function PhotoShare() {
     setAdvanceFeature(!advanceFeature);
   };
 
-  const handleLogin = async (login_name) => {
+  const handleLogin = async (login_name, password) => {
     try {
-      const response = await axios.post('/admin/login', { login_name });
+      const response = await axios.post('/admin/login', { login_name, password });
       setUser(response.data);
     } catch (error) {
       console.error('Login failed', error);
@@ -65,7 +65,9 @@ function PhotoShare() {
   if (!user) {
     return (
       <div>
-        <TopBar user={user} logout={handleLogout} />
+        <div>
+          <TopBar user={user} logout={handleLogout} />
+        </div>
         <LoginRegister onLogin={handleLogin} />
       </div>
     );

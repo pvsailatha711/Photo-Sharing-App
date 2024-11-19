@@ -1,4 +1,5 @@
 .page {
+    margin-top: 30px;
     height: 100vh;
     width: 100%;
     background-image: url("https://t3.ftcdn.net/jpg/06/84/59/22/360_F_684592278_xAceXmIN3m7d3AKj52NDAOuXaeRvEJVC.jpg");
@@ -43,4 +44,22 @@
     background-color: #3f51b5;
     color: white;
     cursor: pointer;
+}
+.password-container {
+    position: relative;
+    input {
+       width: 94%; 
+    }
+}
+.password-icon {
+    right: 6px;
+    top: 5px;
+    position: absolute;
+}
+.error {
+    color: red;
+    opacity: 90%;
+    font-size: 17px;
+    margin-top: 8px;
+    font-weight: bold;
 }
