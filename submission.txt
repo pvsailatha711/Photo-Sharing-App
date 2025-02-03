@@ -1,0 +1,73 @@
+Project 8 - Submission Form
+
+Story number and name: 1 - Extend user profile detail with usage
+
+Story points: 3
+Brief description to see the story in action:
+The user profile now displays the following:
+Most recently uploaded photo (with a small thumbnail and the upload date).
+The photo with the most comments (including a small thumbnail and the comment count).
+Clicking on either photo switches to the user photos view, where the specific photo and its comments are visible (works with advance features also).
+
+
+---
+
+Story number and name: 3 - Visibility control of photos
+Story points: 4
+Brief description to see the story in action:
+When uploading a photo, users can specify a sharing list to control who can view the photo.
+If no sharing list is provided, the photo is visible to everyone.
+If the sharing list is empty, only the photo owner can view it.
+(This is reflected in the displayed photos and photo counts, ensuring privacy settings are honored.)
+
+
+
+---
+
+Story number and name: 4 - Activity feed
+Story points: 4
+Brief description to see the story in action:
+The Activity Feed shows the 5 most recent activities for the current user, such as photo uploads, comments, and login/logout events.
+(This feed dynamically updates to display new activities as they occur).
+(This also ensures privacy settings are honored).
+
+
+
+---
+
+Story number and name: 6 - Photo "like" votes
+Story points: 4
+Brief description to see the story in action:
+Users can like or unlike photos.
+The total like count is displayed alongside each photo.
+Likes are updated in real-time to reflect changes by the current user.
+
+
+
+---
+
+Story number and name: 8 - Sidebar list marks users with new activity
+Story points: 3
+Brief description to see the story in action:
+The sidebar shows all users with their most recent activities, such as photo uploads, comments, and login/logout events.
+For photo uploads, comments, a thumbnail of the photo is displayed. The sidebar updates dynamically when new activities occur.
+
+
+
+---
+
+Total Story Points: 18
+
+Marketing Video URL :
+https://youtu.be/yOCVn2g-vIE
+
+Is it OK if we post your Marketing Video URL on the class discussion forum?
+Yes
+
+
+* Any special instructions for grading (it should be easy for someone to run
+* your app from a new machine):
+Make sure to do - "node loadDatabase.js" (as a new dataBase will be created as project8)
+Check for directory issues when running in windows system.
+Ensure MongoDB is running locally, and the project dependencies are installed via "npm install --legacy-peer-deps".
+Check for babelrc file
