@@ -26,12 +26,14 @@ const photoSchema = new mongoose.Schema({
   user_id: mongoose.Schema.Types.ObjectId,
   // Array of comment objects representing the comments made on this photo.
   comments: [commentSchema],
+
+  like:[mongoose.Schema.Types.ObjectId],
 });
 
 /**
  * Create a Mongoose Model for a Photo using the photoSchema.
  */
-const Photo = mongoose.model("Photo", photoSchema);
+const Photo = mongoose.model("Photo", photoSchema); 
 
 /**
  * Make this available to our application.

@@ -93,6 +93,25 @@ function UserPhotos({ advanceFeature, user }) {
     }
   };
 
+  const handleLike = async (photoId, index) => {
+    if (!user) {
+      alert("You need to be logged in to like a photo.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/likePhoto/${photoId}`);
+      const updatedPhotos = [...photos];
+      const photoIndex = updatedPhotos.findIndex(photo => photo._id === photoId);
+      if (photoIndex !== -1) {
+        updatedPhotos[photoIndex] = response.data;
+        setPhotos(updatedPhotos);
+      }
+    } catch (error) {
+      console.error("Error liking photo:", error);
+    }
+  };
+
   if (!photos.length) {
     return <Typography>Loading photos...</Typography>;
   }
@@ -104,7 +123,7 @@ function UserPhotos({ advanceFeature, user }) {
       {advanceFeature ? (
         <Box className="main-card">
           <Card key={currentPhoto._id} variant="outlined" sx={{ marginBottom: 2 }}>
-          <CardMedia
+            <CardMedia
               component="img"
               image={`/images/${currentPhoto.file_name}`}
               alt={`${currentPhoto.file_name}`}
@@ -121,6 +140,18 @@ function UserPhotos({ advanceFeature, user }) {
               <Typography variant="subtitle2" color="textSecondary">
                 Uploaded on: {new Date(currentPhoto.date_time).toLocaleString()}
               </Typography>
+              <Box marginTop={2}>
+                <Button
+                  variant="contained"
+                  color={Array.isArray(currentPhoto.like) && currentPhoto.like.includes(user._id) ? "secondary" : "primary"}
+                  onClick={() => handleLike(currentPhoto._id, currentPhotoIndex)}
+                >
+                  {Array.isArray(currentPhoto.like) && currentPhoto.like.includes(user._id) ? "Unlike" : "Like"}
+                </Button>
+                <Typography variant="body2" color="textSecondary">
+                  {Array.isArray(currentPhoto.like) ? currentPhoto.like.length : 0} {Array.isArray(currentPhoto.like) && currentPhoto.like.length === 1 ? "Like" : "Likes"}
+                </Typography>
+              </Box>
               {currentPhoto.comments && currentPhoto.comments.length > 0 && (
                 <Box marginTop={2}>
                   <Typography variant="h6">Comments</Typography>
@@ -181,6 +212,18 @@ function UserPhotos({ advanceFeature, user }) {
               <Typography variant="subtitle2" color="textSecondary" className="uploadedOn">
                 Uploaded on: {new Date(photo.date_time).toLocaleString()}
               </Typography>
+              <Box marginTop={2}>
+                <Button
+                  variant="contained"
+                  color={Array.isArray(photo.like) && photo.like.includes(user._id) ? "secondary" : "primary"}
+                  onClick={() => handleLike(photo._id, index)}
+                >
+                  {Array.isArray(photo.like) && photo.like.includes(user._id) ? "Unlike" : "Like"}
+                </Button>
+                <Typography variant="body2" color="textSecondary">
+                  {Array.isArray(photo.like) ? photo.like.length : 0} {Array.isArray(photo.like) && photo.like.length === 1 ? "Like" : "Likes"}
+                </Typography>
+              </Box>
               {photo.comments && photo.comments.length > 0 && (
                 <Box marginTop={2}>
                   <Typography variant="h6">Comments</Typography>

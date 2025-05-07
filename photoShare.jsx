@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { Grid, Typography, Paper } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import { HashRouter, Route, Routes, useParams, useLocation } from "react-router-dom";
 import axios from 'axios';
 
@@ -29,12 +29,12 @@ function PhotoShare() {
       const pathSegments = location.pathname.split('/');
       if (location.pathname.startsWith("/users/")) {
         const userDetails = await fetchAxios(`user/${pathSegments[2]}`);
-        setContentTitle(`${userDetails.data.first_name} ${userDetails.data.last_name} |`);
+        setContentTitle(`${userDetails.data.first_name} ${userDetails.data.last_name}`);
       } else if (location.pathname.startsWith("/photos/")) {
         const userDetails = await fetchAxios(`user/${pathSegments[2]}`);
-        setContentTitle(`Photos of "${userDetails.data.first_name} ${userDetails.data.last_name}" |`);
+        setContentTitle(`Photos of "${userDetails.data.first_name} ${userDetails.data.last_name}"`);
       } else {
-        setContentTitle("Home |");
+        setContentTitle("Home ");
       }
     }
     fetchUserDetails();
@@ -107,7 +107,6 @@ function PhotoShare() {
                 path="/"
                 element={(
                   <div style={{
-                    backgroundImage: 'url("https://t3.ftcdn.net/jpg/06/84/59/22/360_F_684592278_xAceXmIN3m7d3AKj52NDAOuXaeRvEJVC.jpg")',
                     backgroundSize: 'cover',
                     minHeight: '87vh',
                     display: 'flex',
@@ -122,12 +121,7 @@ function PhotoShare() {
                       textAlign: 'center',
                       maxWidth: '600px'
                     }}>
-                      <Typography variant="h4" style={{ color: '#333', fontWeight: 'bold' }}>
-                        Photographs open doors into the past, but they also allow a look into the future.
-                      </Typography>
-                      <Typography variant="h5" style={{ color: '#777', fontStyle: 'italic', marginTop: '10px' }}>
-                        - Sally Mann
-                      </Typography>
+
                     </div>
                   </div>
                 )}

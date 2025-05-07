@@ -77,7 +77,7 @@ function UserList({ advanceFeature }) {
   return (
     <div className="userList-container">
       <Typography variant="h4" className="userList-title">
-        Friends
+        User List
       </Typography>
       <List component="nav">
         {users.map((user, index) => (

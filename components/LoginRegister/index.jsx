@@ -64,7 +64,7 @@ function LoginPage({ onLogin }) {
         <div className='page'>
             <div className='overlay'>
                 <form onSubmit={handleSubmit} className='form'>
-                    <h2 className='title'>{isRegistering ? 'Register' : 'Welcome Back!'}</h2>
+                    <h2 className='title'>{isRegistering ? 'Register' : 'Welcome !!'}</h2>
                     <input
                         type="text"
                         placeholder="Enter login name"
@@ -152,7 +152,7 @@ function LoginPage({ onLogin }) {
                             setSuccess('');
                         }}
                     >
-                        {isRegistering ? 'Switch to Login' : 'Switch to Register'}
+                        {isRegistering ? 'Login' : 'Register'}
                     </button>
                 </form>
             </div>

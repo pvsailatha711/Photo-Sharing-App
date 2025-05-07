@@ -357,6 +357,47 @@ app.post('/user', async function (req, res) {
   }
 });
 
+
+app.post('/likePhoto/:photoId', function(request, response) {
+  // Check if user is logged in
+  if (!request.session.user_id) {
+      return response.status(401).send('Unauthorized');
+  }
+
+  const photoId = request.params.photoId;
+  const userId = request.session.user_id;
+
+  // Find the photo by ID
+  Photo.findOne({ _id: photoId }, function(err, photo) {
+      if (err) {
+          return response.status(400).send('Error finding photo');
+      }
+      if (!photo) {
+          return response.status(404).send('Photo not found');
+      }
+
+      // Check if the user has already liked the photo
+      const userIndex = photo.like.indexOf(userId);
+
+      // If the user hasn't liked the photo yet, add them to the like array
+      if (userIndex === -1) {
+          photo.like.push(userId);
+      } else {
+          // If the user has already liked the photo, remove them from the like array
+          photo.like.splice(userIndex, 1);
+      }
+
+      // Save the updated photo document
+      photo.save(function(saveErr) {
+          if (saveErr) {
+              return response.status(500).send('Error saving photo');
+          }
+          response.status(200).send(photo);
+      });
+  });
+});
+
+
 const server = app.listen(3000, function () {
   const port = server.address().port;
   console.log(

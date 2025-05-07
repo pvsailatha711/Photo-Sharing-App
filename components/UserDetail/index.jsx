@@ -33,17 +33,12 @@ function UserDetail() {
 
   return (
     <Box className="userDetail-container">
-      <Typography variant="h3" className="userDetail-header">
+      <Typography variant="h5" className="userDetail-header">
         {user.first_name} {user.last_name}
       </Typography>
-      <Typography variant="subtitle1" className="userDetail-subtitle">
-        {user.occupation} - {user.location}
-      </Typography>
-      <Typography
-        variant="h5"
-        className="userDetail-description"
-        dangerouslySetInnerHTML={{ __html: user.description }}
-      />
+      <Typography variant="body1">Location: {user.location}</Typography>
+      <Typography variant="body1">Occupation: {user.occupation}</Typography>
+      <Typography variant="body1">Description: {user.description}</Typography>
 
       <Button
         variant="outlined"
